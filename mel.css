@@ -6,21 +6,32 @@ body {
 }
 table{
     margin-top:50px;
-    background:;
-    background: -webkit-linear-gradient(rgba(250, 240, 200, .7), rgba(250, 250, 250, .7)), url('./bg.jpg');
-    background: -moz-linear-gradient(rgba(250, 240, 200, .7), rgba(250, 250, 250, .7)), url('./bg.jpg');
-    background: linear-gradient(rgba(250, 240, 200, .7), rgba(250, 250, 250, .7)), url('./bg.jpg');
+    background: -webkit-linear-gradient(rgba(250, 240, 200, .7), rgba(250, 250, 250, .7)), url('./bg.JPG');
+    background: -moz-linear-gradient(rgba(250, 240, 200, .7), rgba(250, 250, 250, .7)), url('./bg.JPG');
+    background: linear-gradient(rgba(250, 240, 200, .7), rgba(250, 250, 250, .7)), url('./bg.JPG');
 }
-td{
-    
-}
+
 .staffRow{
-    width:80vw;
+    width:1000px;
     height:50px;
     border-top: 2px solid #000;
 }
 #treb{
-    width:10vw;
+    width:100px;
     font-size:48pt;
     text-align: center;
+}
+.aNote{
+    display:block;
+    font-size:24pt;
+    position:absolute;
+    border:1px solid #000;
+    border-radius: 50%;
+    width:10px;
+    height:10px;
+    transition-duration:.5s;
+}
+.aNote:hover{
+    width:20px;
+    height:20px;
 }
