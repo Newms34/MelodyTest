@@ -1,7 +1,11 @@
 var app = angular.module("modeler", []);
 
 app.controller("MainController", function($scope, $window, $compile) {
-    $scope.test = new Date();
+
+	var currToneNum = 0;
+	$scope.isDisabled = false;
+
+    $scope.notes = []
     // random note generator
     $scope.generateNotes = function generateNotes (melodyLength) {
 		var nums = [];
@@ -21,16 +25,55 @@ app.controller("MainController", function($scope, $window, $compile) {
 		var freqs = nums.map(function (num){
 			return frequencies[num];
 		})
-		return freqs;
-	}
+		$scope.notes = freqs;
+	};
+
+	$scope.playNotes = function() {
+		$scope.isDisabled = true;
+		currToneNum = 0;
+		$scope.oscOn($scope.notes[0], 500)
+	};
+
+
+
+	$scope.oscOn = function(freq, dur) {
+		
+	    //this function plays a tone. it then stops the tone after 'dur' seconds and continues on to the next tone (if there is one)
+	    // var barW = parseInt((100 * (freq - min) / (max - min)));
+	    // var barHue = (currToneNum * 30) % 360
+	    if (typeof oscillator != 'undefined') oscillator.disconnect(); //if there is a previous osc, disconnect it first
+	    oscillator = context.createOscillator();
+	    oscillator.frequency.value = freq;
+	    oscillator.connect(gainNode);
+	    gainNode.connect(context.destination);
+	    gainNode.gain.value = gainValue;
+	    oscillator.type = soundType;
+	    oscillator.start ? oscillator.start(0) : oscillator.noteOn(0);
+	  
+	    if (currToneNum === $scope.notes.length-1) {
+	    	$scope.isDisabled = false;
+	    	$scope.$digest();
+	    }
+
+	    setTimeout(function() {
+	    	// console.log($scope.notes[currToneNum])
+	        oscillator.disconnect();
+	        if (currToneNum < $scope.notes.length - 1) {
+	            //still freqs to play!
+	            currToneNum++;
+	            $scope.oscOn($scope.notes[currToneNum], 500);
+	        }
+	    }, dur);
+	};
+
+
 });
 
 
 
+// ######## AudioOutput ####################
 
-mock_output = [261.6,	293.7,	329.6,	349.2,	392.0,	440.0,	493.9];
 
-// ######## AudioContext producer
 
 var audioCont = (window.AudioContext || window.webkitAudioContext || window.mozAudioContext || window.oAudioContext || window.msAudioContext);
 
@@ -38,7 +81,7 @@ var recorded = false; //flag if we've already written the notes.
 var soundType = 'sine';
 
 // set the broswer's audioContext 
-var currToneNum = 0;
+
 if (audioCont) {
     var context = new audioCont();
     var gainValue = 0.5; //vol!
@@ -48,41 +91,9 @@ if (audioCont) {
     alert('Your browser doesn\'t support webaudio. Sorry!');
 }
 
-freqArr = mock_output;
+// freqArr = mock_output;
 
-var oscOn = function(freq, dur) {
-    //this function plays a tone. it then stops the tone after 'dur' seconds and continues on to the next tone (if there is one)
-    // var barW = parseInt((100 * (freq - min) / (max - min)));
-    // var barHue = (currToneNum * 30) % 360
-    if (typeof oscillator != 'undefined') oscillator.disconnect(); //if there is a previous osc, disconnect it first
-    oscillator = context.createOscillator();
-    oscillator.frequency.value = freq;
-    oscillator.connect(gainNode);
-    gainNode.connect(context.destination);
-    gainNode.gain.value = gainValue;
-    oscillator.type = soundType;
-    oscillator.start ? oscillator.start(0) : oscillator.noteOn(0);
-    // $('#showBar').css({
-    //     'width': barW + '%',
-    //     'background-color': 'hsl(' + barHue + ',100%,' + barW + '%)'
-    // });
-    setTimeout(function() {
-    	console.log(freqArr[currToneNum])
-        oscillator.disconnect();
-        if (currToneNum < freqArr.length - 1) {
-            //still freqs to play!
-            currToneNum++;
-            oscOn(freqArr[currToneNum], 500);
-        }
-    }, dur);
-};
 
-// for (var i =0 ; i<mock_output.length ; i++) {
-// 	console.log(mock_output[i])
-// 	oscOn(mock_output[i], 500)
-// }
-
-window.onload = function() { oscOn(mock_output[currToneNum], 500) }
 
 function generateNum () {
 	var min = 0; // 0 = C (middle)

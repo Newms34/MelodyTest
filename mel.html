@@ -12,6 +12,9 @@
 
 <body>
     <div id='allStuff' ng-app='modeler' ng-controller='MainController'>
+        <button ng-click="generateNotes(8)">Generate Notes!</button>
+        <button ng-click="playNotes()" ng-disabled="isDisabled">Play Notes!</button>
+        {{ notes }}
         <table id='staff'>
             <tr>
                 <td rowspan='5' id='treb'>&#119070;</td><td class='staffRow'></td>
