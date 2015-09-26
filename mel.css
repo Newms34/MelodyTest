@@ -35,3 +35,28 @@ table{
     width:20px;
     height:20px;
 }
+.key{
+    display:inline-block;
+    width:50px;
+    height:50px;
+    border:1px solid #999;
+    border-radius:5px;
+    text-align: center;
+    font-size:large;
+    background-color:#eee;
+    margin-right:5px;
+    transition-duration:.5s;
+}
+.key > .note{
+    color:#eee;
+    position:relative;
+    bottom:0px;
+    transition-duration:.5s;
+}
+.key:hover{
+    color:#ccc;
+    background-color:#ccc;
+}
+.key:hover>.note{
+    color:#000;
+}

@@ -2,6 +2,34 @@ var app = angular.module("modeler", []);
 
 app.controller("MainController", function($scope, $window, $compile) {
     $scope.fullNotes = [];
+    $scope.userAttempt = [];
+    $scope.testing = false;
+    $scope.melLeng = 8;
+    $scope.keys = [{
+        key: 'A',
+        note: 'E'
+    }, {
+        key: 'S',
+        note: 'F'
+    }, {
+        key: 'D',
+        note: 'G'
+    }, {
+        key: 'F',
+        note: 'A'
+    }, {
+        key: 'G',
+        note: 'B'
+    }, {
+        key: 'H',
+        note: 'C'
+    }, {
+        key: 'J',
+        note: 'D'
+    }, {
+        key: 'K',
+        note: 'E'
+    }];
     $scope.noteCols = ['#f00', '#fc0', '#ff0', '#cf0', '#0f0', '#0fc', '#0ff', '#0cf'];
     $scope.noteYs = {
         0: 246,
@@ -36,12 +64,21 @@ app.controller("MainController", function($scope, $window, $compile) {
         6: 587.33,
         7: 659.25
     };
-
+    $scope.keyArr = {
+        65: 0,
+        83: 1,
+        68: 2,
+        70: 3,
+        71: 4,
+        72: 5,
+        74: 6,
+        75: 7
+    };
     var currToneNum = 0;
     $scope.isDisabled = false;
 
-    $scope.notes = []
-        // random note generator
+    $scope.notes = [];
+    // random note generator
     $scope.generateNotes = function generateNotes(melodyLength) {
         var nums = [];
         while (nums.length < melodyLength) {
@@ -59,9 +96,6 @@ app.controller("MainController", function($scope, $window, $compile) {
         currToneNum = 0;
         $scope.oscOn($scope.notes[0], 500)
     };
-
-
-
     $scope.oscOn = function(freq, dur) {
 
         //this function plays a tone. it then stops the tone after 'dur' seconds and continues on to the next tone (if there is one)
@@ -73,25 +107,56 @@ app.controller("MainController", function($scope, $window, $compile) {
         oscillator.connect(gainNode);
         gainNode.connect(context.destination);
         gainNode.gain.value = gainValue;
-        oscillator.type = soundType;
+        oscillator.type = 'triangle';
         oscillator.start ? oscillator.start(0) : oscillator.noteOn(0);
 
         if (currToneNum === $scope.notes.length - 1) {
             $scope.isDisabled = false;
             $scope.$digest();
         }
-
-        setTimeout(function() {
-            // console.log($scope.notes[currToneNum])
-            oscillator.disconnect();
-            if (currToneNum < $scope.notes.length - 1) {
-                //still freqs to play!
-                currToneNum++;
-                $scope.oscOn($scope.notes[currToneNum], 500);
-            }
-        }, dur);
+        if (dur) {
+            setTimeout(function() {
+                // console.log($scope.notes[currToneNum])
+                oscillator.disconnect();
+                if (currToneNum < $scope.notes.length - 1) {
+                    //still freqs to play!
+                    currToneNum++;
+                    $scope.oscOn($scope.notes[currToneNum], 500);
+                }
+            }, dur);
+        }
     };
+    //onkeydown starts osc
+    window.onkeydown = function(e) {
+        console.log('Hi! You pressed key numbah: ', $scope.keyArr[e.which]);
+        if ($scope.keyArr[e.which] !== undefined) {
 
+            $scope.oscOn($scope.keyArr[e.which]);
+        }
+    };
+    //onkeyup stops osc, sends val to 'completed notes' arr
+    window.onkeyup = function(e) {
+        if (typeof oscillator != 'undefined') oscillator.disconnect();
+        if ($scope.testing) {
+            if ($scope.keyArr[e.which] !== undefined) {
+                $scope.userAttempt.push($scope.keyArr[e.which])
+            }
+            if ($scope.notes.length == $scope.userAttempt.length) {
+                $scope.runTest();
+            }
+        }
+    };
+    $scope.runTest = function() {
+        var numCorrect = 0;
+        for (var i = 0; i < $scope.notes.length; i++) {
+            if ($scope.notes[i] == $scope.userAttempt[i]) {
+                numCorrect++;
+            }
+        }
+        var perc = Math.floor(100 * numCorrect / ($scope.notes.length - 1));
+        bootbox.alert('Hey! You got ' + perc + '% of the notes correct');
+        console.log($scope.notes, $scope.userAttempt);
+    };
 
 });
 
@@ -104,7 +169,6 @@ app.controller("MainController", function($scope, $window, $compile) {
 var audioCont = (window.AudioContext || window.webkitAudioContext || window.mozAudioContext || window.oAudioContext || window.msAudioContext);
 
 var recorded = false; //flag if we've already written the notes.
-var soundType = 'sine';
 
 // set the broswer's audioContext 
 
