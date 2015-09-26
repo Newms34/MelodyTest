@@ -27,9 +27,12 @@
             </tr>
             <tr>
                 <td class='staffRow'></td>
+            <div class='aNote' ng-repeat='note in fullNotes' style='left:{{note.x}}px;top:{{note.y}}px;background-color:{{note.col}}'></div>
             </tr>
-            <div class='aNote' ng-repeat='note in fullNotes' style='left:'>&#9834;</div>
         </table>
+        <button ng-click="generateNotes(8)">Generate Notes!</button>
+        <button ng-click="playNotes()" ng-disabled="isDisabled">Play Notes!</button>
+        {{ notes }}
         <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
         <script src='https://code.jquery.com/ui/1.11.4/jquery-ui.min.js' /></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
