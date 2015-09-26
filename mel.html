@@ -14,9 +14,7 @@
     <div id='allStuff' ng-app='modeler' ng-controller='MainController'>
         <table id='staff'>
             <tr>
-                <td rowspan='5' id='treb'>&#119070;</td><td class='staffRow'></td>
-            </tr>
-            <tr>
+                <td rowspan='5' id='treb'>&#119070;</td>
                 <td class='staffRow'></td>
             </tr>
             <tr>
@@ -27,12 +25,25 @@
             </tr>
             <tr>
                 <td class='staffRow'></td>
-            <div class='aNote' ng-repeat='note in fullNotes' style='left:{{note.x}}px;top:{{note.y}}px;background-color:{{note.col}}'></div>
+            </tr>
+            <tr>
+                <td class='staffRow'></td>
+                <div class='aNote' ng-repeat='note in fullNotes' style='left:{{note.x}}px;top:{{note.y}}px;background-color:{{note.col}}'></div>
             </tr>
         </table>
-        <button ng-click="generateNotes(8)">Generate Notes!</button>
+        <button ng-click="generateNotes(melLeng)">Generate Notes!</button>
         <button ng-click="playNotes()" ng-disabled="isDisabled">Play Notes!</button>
         {{ notes }}
+        <div class='container'>
+            <div id='info' class='col-md-5'>
+                # of notes: {{melLeng}}<input type='range' min='2' max='20' ng-model='melLeng' /> 
+                <input type='radio' ng-model='testing' ng-value='true' value='true' />Test
+                <input type='radio' ng-model='testing' ng-value='false' value='false' />Just have Fun!
+            </div>
+        </div>
+        <div id='keys'>
+            <div class='key' ng-repeat='key in keys'>{{key.key}}<div class='note'>{{key.note}}</div></div>
+        </div>
         <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
         <script src='https://code.jquery.com/ui/1.11.4/jquery-ui.min.js' /></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
