@@ -61,4 +61,4 @@ var oscOn = function(freq, dur) {
 // 	oscOn(mock_output[i], 500)
 // }
 
-oscOn(mock_output[currToneNum], 500)
+window.onload = function() { oscOn(mock_output[currToneNum], 500) }
