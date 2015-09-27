@@ -30,10 +30,10 @@ table{
     width:10px;
     height:10px;
     transition-duration:.5s;
+    transform-origin:50% 50%;
 }
 .aNote:hover{
-    width:20px;
-    height:20px;
+    transform:scale(2,2);
 }
 .key{
     display:inline-block;
@@ -45,18 +45,24 @@ table{
     font-size:large;
     background-color:#eee;
     margin-right:5px;
-    transition-duration:.5s;
+    transition-duration:1s;
 }
 .key > .note{
     color:#eee;
     position:relative;
     bottom:0px;
-    transition-duration:.5s;
+    transition-duration:1s;
 }
 .key:hover{
     color:#ccc;
     background-color:#ccc;
 }
+.hiKey{
+    background-color:#faa;
+}
 .key:hover>.note{
     color:#000;
+}
+.col-md-4, .col-md-8{
+    border-top:1px solid #aaa;
 }

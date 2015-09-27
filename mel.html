@@ -35,14 +35,31 @@
         <button ng-click="playNotes()" ng-disabled="isDisabled">Play Notes!</button>
         {{ notes }}
         <div class='container'>
-            <div id='info' class='col-md-5'>
-                # of notes: {{melLeng}}<input type='range' min='2' max='20' ng-model='melLeng' /> 
-                <input type='radio' ng-model='testing' ng-value='true' value='true' />Test
-                <input type='radio' ng-model='testing' ng-value='false' value='false' />Just have Fun!
+            <div class='panel panel-info'>
+                <div class='panel-heading'>
+                    Tools
+                </div>
+                <div class='panel-body'>
+                    <div class='col-md-4'>Number of notes</div>
+                    <div id='info' class='col-md-8'>
+                        {{melLeng}}
+                        <input type='range' min='2' max='20' ng-model='melLeng' />
+                    </div>
+                    <div class='col-md-4'>Mode</div>
+                    <div class='col-md-8'>
+                        <input type='radio' ng-model='testing' ng-value='true' value='true' ng-change='challWarn();'/>Do a challenge!
+                        <input type='radio' ng-model='testing' ng-value='false' value='false' ng-change='challWarn();'/>Just have fun!
+                    </div>
+                    <div class='col-md-12'>
+                        Time elapsed: {{timer/10}}s
+                    </div>
+                </div>
             </div>
         </div>
         <div id='keys'>
-            <div class='key' ng-repeat='key in keys'>{{key.key}}<div class='note'>{{key.note}}</div></div>
+            <div class='key' ng-repeat='key in keys' ng-class='{hiKey:currKey===key.key}'>{{key.key}}
+                <div class='note' ng-class='{hiKey:currKey===key.key}'>{{key.note}}</div>
+            </div>
         </div>
         <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
         <script src='https://code.jquery.com/ui/1.11.4/jquery-ui.min.js' /></script>
