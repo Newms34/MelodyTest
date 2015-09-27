@@ -5,6 +5,9 @@ app.controller("MainController", function($scope, $window, $compile) {
     $scope.userAttempt = [];
     $scope.testing = false;
     $scope.melLeng = 8;
+    $scope.timer = 0;
+    $scope.clock;
+    $scope.currKey = 0;
     $scope.keys = [{
         key: 'A',
         note: 'E'
@@ -128,18 +131,29 @@ app.controller("MainController", function($scope, $window, $compile) {
     };
     //onkeydown starts osc
     window.onkeydown = function(e) {
+        $scope.currKey = String.fromCharCode(e.which);
+        $scope.$digest();
         console.log('Hi! You pressed key numbah: ', $scope.keyArr[e.which]);
         if ($scope.keyArr[e.which] !== undefined) {
 
             $scope.oscOn($scope.keyArr[e.which]);
         }
+        //now start timer (if not started already)
+        if ($scope.testing && !$scope.timer) {
+            $scope.clock = setInterval(function() {
+                $scope.timer++;
+                $scope.$digest();
+            }, 100);
+        }
     };
     //onkeyup stops osc, sends val to 'completed notes' arr
     window.onkeyup = function(e) {
+        $scope.currKey = 0;
+        $scope.$digest();
         if (typeof oscillator != 'undefined') oscillator.disconnect();
         if ($scope.testing) {
             if ($scope.keyArr[e.which] !== undefined) {
-                $scope.userAttempt.push($scope.keyArr[e.which])
+                $scope.userAttempt.push($scope.keyArr[e.which]);
             }
             if ($scope.notes.length == $scope.userAttempt.length) {
                 $scope.runTest();
@@ -148,16 +162,26 @@ app.controller("MainController", function($scope, $window, $compile) {
     };
     $scope.runTest = function() {
         var numCorrect = 0;
+        clearInterval($scope.clock);
         for (var i = 0; i < $scope.notes.length; i++) {
             if ($scope.notes[i] == $scope.userAttempt[i]) {
                 numCorrect++;
             }
         }
+        $scope.userAttempt=[];
         var perc = Math.floor(100 * numCorrect / ($scope.notes.length - 1));
-        bootbox.alert('Hey! You got ' + perc + '% of the notes correct');
+        bootbox.alert('Hey! You got ' + perc + '% of the notes correct in '+$scope.timer/10+' seconds!');
         console.log($scope.notes, $scope.userAttempt);
     };
-
+    $scope.challWarn = function() {
+        if ($scope.testing) {
+            $scope.userAttempt = []; //wipe attempt list
+            bootbox.alert('Get ready! The challenge will start when you play the first note!');
+        } else {
+            $scope.timer = 0;
+            clearInterval($scope.clock);
+        }
+    };
 });
 
 
